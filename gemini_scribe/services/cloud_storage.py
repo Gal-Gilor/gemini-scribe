@@ -213,3 +213,24 @@ class AsyncStorageBucket:
                 exc_info=True,
             )
             raise
+
+
+async def get_storage_bucket(
+    bucket_name: str,
+    session: Optional[aiohttp.ClientSession] = None,
+) -> AsyncStorageBucket:
+    """Get an async storage bucket instance.
+
+    Args:
+        bucket_name: Name of the storage bucket.
+        session: Optional aiohttp session. If None, client will create its own.
+
+    Returns:
+        AsyncStorageBucket: Configured async storage bucket instance.
+
+    Raises:
+        Exception: If client creation fails.
+    """
+    client = await create_storage_client(session)
+
+    return AsyncStorageBucket(client, bucket_name)
