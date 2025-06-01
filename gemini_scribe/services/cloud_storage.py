@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Optional
 
 import aiohttp
@@ -150,6 +151,10 @@ class AsyncStorageBucket:
             blob_data = await self.client.download(
                 bucket=self.name, object_name=source_blob_name
             )
+
+            # Create parent directory if it doesn't exist
+            destination_path = Path(destination_file_path)
+            destination_path.parent.mkdir(parents=True, exist_ok=True)
 
             with open(destination_file_path, "wb") as file_obj:
                 file_obj.write(blob_data)
