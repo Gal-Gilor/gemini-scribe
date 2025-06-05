@@ -152,7 +152,6 @@ async def test_extract_and_concatenate_code_blocks_custom_separator():
     # Assert
     assert result.startswith("x = 1")
     assert result.endswith("y = 2")
-    assert "y = 2" in result
     assert "###" in result
 
 
