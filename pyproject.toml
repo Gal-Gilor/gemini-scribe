@@ -45,3 +45,8 @@ docstring-code-format = true
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "auto"
+
+
