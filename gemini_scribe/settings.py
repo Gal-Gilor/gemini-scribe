@@ -4,6 +4,7 @@ from pathlib import Path
 
 import jinja2
 from google import genai
+from google.genai import types
 from pydantic_settings import BaseSettings
 from pydantic_settings import SettingsConfigDict
 
@@ -116,4 +117,27 @@ def create_jinja2_environment(
 
 jinja2_env_async = create_jinja2_environment(
     templates_directory="templates", enable_async=True
+)
+
+
+GENERATION_CONFIG = types.GenerateContentConfig(
+    safety_settings=[
+        types.SafetySetting(
+            category=types.HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+            threshold=types.HarmBlockThreshold.BLOCK_NONE,
+        ),
+        types.SafetySetting(
+            category=types.HarmCategory.HARM_CATEGORY_HARASSMENT,
+            threshold=types.HarmBlockThreshold.BLOCK_NONE,
+        ),
+        types.SafetySetting(
+            category=types.HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+            threshold=types.HarmBlockThreshold.BLOCK_NONE,
+        ),
+        types.SafetySetting(
+            category=types.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+            threshold=types.HarmBlockThreshold.BLOCK_NONE,
+        ),
+    ],
+    max_output_tokens=8192,
 )
