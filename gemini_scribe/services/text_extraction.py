@@ -29,7 +29,10 @@ async def extract_code_blocks_from_text(text: str) -> List[str]:
         A list of strings, each containing the content of a code block.
     """
     pattern = re.compile(r"```(?:[^\n]*)\n(.*?)```", re.DOTALL)
-    return await extract_code_block(text, pattern)
+    blocks = await extract_code_block(text, pattern)
+
+    # Strip each block of leading/trailing whitespace
+    return [block.strip() for block in blocks]
 
 
 async def extract_and_concatenate_code_blocks(text: str, sep: str = "\n\n") -> str:
