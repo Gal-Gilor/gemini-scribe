@@ -7,6 +7,7 @@ PDF documents into Markdown using Google's Gemini.
 from contextlib import asynccontextmanager
 
 import uvicorn
+from endpoints.extraction import extract_router
 from endpoints.health import health_router
 from fastapi import FastAPI
 from fastapi import HTTPException
@@ -38,6 +39,7 @@ app = FastAPI(
 )
 
 app.include_router(health_router, tags=["Health"])
+app.include_router(extract_router, tags=["Parser"])
 
 # Configure CORS
 app.add_middleware(
