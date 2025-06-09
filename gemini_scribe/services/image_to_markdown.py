@@ -147,3 +147,30 @@ class GeminiParserAsync:
         except Exception as e:
             logger.error(f"Failed to convert {file_path.name}: {e}", exc_info=True)
             raise
+
+        finally:
+            # Clean up temporary image files
+            delete_temp_folder = True
+            if "image_paths" in locals() and isinstance(image_paths, list):
+                for img_path in image_paths:
+                    try:
+                        img_path.unlink(missing_ok=True)
+
+                    except Exception as e:
+                        logger.warning(f"Failed to delete {img_path}: {e}")
+                        delete_temp_folder = False
+
+                # Remove the temporary parent directory if empty
+                if delete_temp_folder:
+                    try:
+
+                        # Remvove the temporary parent directory if empty
+                        internal_data_directory = image_paths[-1].parent
+                        internal_data_directory.rmdir()
+
+                        # Remove the temporary grandparent directory if empty
+                        temp_dir = internal_data_directory.parent
+                        temp_dir.rmdir()
+
+                    except Exception as e:
+                        logger.warning(f"Failed to delete temp directory {temp_dir}: {e}")
