@@ -1,10 +1,42 @@
 from pathlib import Path
 from typing import Optional
+from urllib.parse import urlparse
 
 import aiohttp
 from gcloud.aio.storage import Storage
 
 from gemini_scribe.settings import logger
+
+
+async def extract_file_path_from_gsutil_url(url_or_path: str) -> str:
+    """Extract file path from gsutil URL or return input if already a path.
+
+    Args:
+        url_or_path: A gsutil URL (gs://bucket/path/to/file) or file path.
+
+    Returns:
+        The file path portion (without bucket) or the original input if not
+        a gs:// URL.
+
+    Examples:
+        >>> extract_file_path_from_gsutil_url("gs://my-bucket/folder/file.txt")
+        'folder/file.txt'
+        >>> extract_file_path_from_gsutil_url("gs://my-bucket/file.txt")
+        'file.txt'
+        >>> extract_file_path_from_gsutil_url("/local/path/file.txt")
+        '/local/path/file.txt'
+        >>> extract_file_path_from_gsutil_url("relative/path/file.txt")
+        'relative/path/file.txt'
+        >>> extract_file_path_from_gsutil_url("gs://bucket-only/")
+        ''
+    """
+    if not url_or_path.startswith("gs://"):
+        # Assume that the URL is a filepath
+        return url_or_path
+
+    parsed_url = urlparse(url_or_path)
+
+    return parsed_url.path.lstrip("/")
 
 
 async def create_storage_client(session: Optional[aiohttp.ClientSession] = None) -> Storage:
@@ -92,6 +124,22 @@ class AsyncStorageBucket:
         except Exception as e:
             logger.error(f"Failed to list blobs in bucket '{self.name}': {e}", exc_info=True)
             raise
+
+    async def blob_exists(self, blob_name: str) -> bool:
+        """Check if a blob exists in the bucket.
+
+        Args:
+            blob_name: Name of the blob to check.
+
+        Returns:
+            bool: True if blob exists, False otherwise."""
+        try:
+            # This only downloads metadata (~1KB), NOT the blob content
+            await self.client.download_metadata(bucket=self.name, object_name=blob_name)
+            return True
+
+        except Exception:
+            return False
 
     async def upload_blob(
         self,
