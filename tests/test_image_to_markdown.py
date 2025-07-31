@@ -172,7 +172,11 @@ async def test_to_markdown_success(monkeypatch, tmp_path):
     # No need to actually create the files
 
     # Mock results from text extraction
-    extracted_texts = ["Content from page 1", "Content from page 2", "Content from page 3"]
+    extracted_texts = [
+        "Content from page 1",
+        "Content from page 2",
+        "Content from page 3",
+    ]
     expected_markdown = "\n\n".join(extracted_texts)
 
     # Setup mocks

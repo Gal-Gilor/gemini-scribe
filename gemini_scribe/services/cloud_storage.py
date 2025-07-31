@@ -39,7 +39,9 @@ async def extract_file_path_from_gsutil_url(url_or_path: str) -> str:
     return parsed_url.path.lstrip("/")
 
 
-async def create_storage_client(session: Optional[aiohttp.ClientSession] = None) -> Storage:
+async def create_storage_client(
+    session: Optional[aiohttp.ClientSession] = None,
+) -> Storage:
     """Create an async Google Cloud Storage client.
 
     Args:
@@ -179,8 +181,7 @@ class AsyncStorageBucket:
 
         except Exception as e:
             logger.error(
-                f"Failed to upload file '{source_file_path}' to "
-                f"bucket '{self.name}': {e}",
+                f"Failed to upload file '{source_file_path}' to bucket '{self.name}': {e}",
                 exc_info=True,
             )
             raise
@@ -235,7 +236,7 @@ class AsyncStorageBucket:
 
         except Exception as e:
             logger.error(
-                f"Failed to delete blob '{blob_name}' from " f"bucket '{self.name}': {e}",
+                f"Failed to delete blob '{blob_name}' from bucket '{self.name}': {e}",
                 exc_info=True,
             )
             raise

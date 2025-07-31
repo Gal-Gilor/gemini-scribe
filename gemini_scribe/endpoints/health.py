@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
-from models import Status
+
+from gemini_scribe.models import Status
 
 health_router = APIRouter()
 

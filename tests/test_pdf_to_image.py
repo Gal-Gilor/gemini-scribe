@@ -101,14 +101,14 @@ async def test_save_pdf_as_images_success(sample_images, tmp_path, monkeypatch):
 
     # Mock convert_from_path to return sample images instead of requiring real PDF
     with patch(
-        "gemini_scribe.services.pdf_to_image.convert_from_path", return_value=sample_images
+        "gemini_scribe.services.pdf_to_image.convert_from_path",
+        return_value=sample_images,
     ) as mock_convert:
         # Mock save_images to verify it's called correctly
         with patch(
             "gemini_scribe.services.pdf_to_image.save_images",
             return_value=["path1", "path2", "path3"],
         ) as mock_save:
-
             # Act
             result = await save_pdf_as_images(pdf_path, destination)
 
@@ -134,7 +134,8 @@ async def test_save_pdf_as_images_with_default_destination(sample_images, monkey
 
     # Act/Assert
     with patch(
-        "gemini_scribe.services.pdf_to_image.convert_from_path", return_value=sample_images
+        "gemini_scribe.services.pdf_to_image.convert_from_path",
+        return_value=sample_images,
     ):
         with patch("gemini_scribe.services.pdf_to_image.save_images") as mock_save:
             await save_pdf_as_images(pdf_path)

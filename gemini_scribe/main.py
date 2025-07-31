@@ -7,13 +7,14 @@ PDF documents into Markdown using Google's Gemini.
 from contextlib import asynccontextmanager
 
 import uvicorn
-from endpoints.extraction import extract_router
-from endpoints.health import health_router
 from fastapi import FastAPI
 from fastapi import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from settings import logger
+
+from gemini_scribe.endpoints.extraction import extract_router
+from gemini_scribe.endpoints.health import health_router
+from gemini_scribe.settings import logger
 
 
 @asynccontextmanager
@@ -24,11 +25,11 @@ async def lifespan(app: FastAPI):
         app: The FastAPI application instance.
     """
 
-    logger.info("Starting Gemini Scribe application")
+    logger.info("Starting Gemini Scribe")
     yield
 
     # Shutdown
-    logger.info("Shutting down Gemini Scribe application")
+    logger.info("Shutting down Gemini Scribe")
 
 
 app = FastAPI(
@@ -74,4 +75,4 @@ async def http_exception_handler(request, exc):
 
 
 if __name__ == "__main__":
-    uvicorn.run("gemini_scribe.main:app", host="0.0.0.0", port=8080, reload=True)
+    uvicorn.run("gemini_scribe.main:app", host="0.0.0.0", port=8080)

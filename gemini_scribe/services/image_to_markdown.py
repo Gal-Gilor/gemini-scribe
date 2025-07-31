@@ -163,7 +163,6 @@ class GeminiParserAsync:
                 # Remove the temporary parent directory if empty
                 if delete_temp_folder:
                     try:
-
                         # Remvove the temporary parent directory if empty
                         internal_data_directory = image_paths[-1].parent
                         internal_data_directory.rmdir()

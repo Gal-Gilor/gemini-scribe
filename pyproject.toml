@@ -20,6 +20,7 @@ dependencies = [
     "pytest-asyncio (>=1.0.0,<2.0.0)",
     "pillow (>=11.2.1,<12.0.0)",
     "pdf2image (>=1.17.0,<2.0.0)",
+    "google-cloud-run (>=0.10.19,<0.11.0)",
 ]
 
 [tool.poetry.group.dev.dependencies]
