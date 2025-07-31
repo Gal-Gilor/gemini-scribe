@@ -6,7 +6,7 @@
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-green.svg)](https://fastapi.tiangolo.com)
 
-A high-performance FastAPI service that converts PDF documents to clean Markdown using Google's Gemini AI. Built for production use with Google Cloud Platform integration.
+A FastAPI service for converting PDF documents to clean Markdown using Google's Gemini AI. 
 
 ## Features
 
@@ -22,15 +22,15 @@ A high-performance FastAPI service that converts PDF documents to clean Markdown
 - **FastAPI Application**: CORS-enabled REST API with structured endpoints
 - **Cloud Storage Service**: Google Cloud Storage integration for file operations
 - **PDF Processing Engine**: Converts PDF pages to images using pdf2image
-- **AI Text Extraction**: Gemini AI-powered image-to-markdown conversion
+- **AI Text Extraction**: Gemini-powered image-to-markdown conversion
 - **Configuration Management**: Environment-based settings with Pydantic validation
 
 ### Processing Flow
 1. Client uploads PDF via `gs://` URI to `/extract_text` endpoint
 2. Service downloads PDF from Google Cloud Storage
 3. PDF converted to images using pdf2image
-4. Images processed by Gemini AI with structured prompts
-5. AI response parsed to extract clean Markdown
+4. Images processed by Gemini with structured prompts
+5. Response parsed to extract clean Markdown
 6. Temporary files cleaned up and results returned
 
 ## Prerequisites
@@ -297,5 +297,4 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 ## Support
 
 - **Issues**: [GitHub Issues](https://github.com/Gal-Gilor/gemini-scribe/issues)
-- **Documentation**: See `CLAUDE.md` for development guidelines
-- **Author**: Gal Gilor (gilorgal2010@gmail.com)
+- **Author**: Gal Gilor
