@@ -1,12 +1,19 @@
 import asyncio
+import functools
 import os
+import random
 import time
 from pathlib import Path
+from typing import Any
+from typing import Callable
 from typing import List
+from typing import Optional
+from typing import TypeVar
 from typing import Union
 
 from google import genai
 from google.genai import types
+from google.genai.errors import APIError
 from PIL import Image
 
 from gemini_scribe.services.pdf_to_image import save_pdf_as_images
@@ -15,11 +22,81 @@ from gemini_scribe.settings import GENERATION_CONFIG
 from gemini_scribe.settings import jinja2_env_async
 from gemini_scribe.settings import logger
 
+F = TypeVar("F", bound=Callable[..., Any])
+
+
+def retry_transient_errors(
+    max_retries: int = 10,
+    initial_delay: float = 1.0,
+    backoff_factor: float = 2.0,
+    use_jitter: bool = True,
+) -> Callable[[F], F]:
+    """Decorator to retry functions on transient API errors with exponential backoff.
+
+    Implements exponential backoff with optional jitter for API calls that may fail
+    with transient errors. Only retries on specific HTTP status codes (500, 503, 429).
+    All other errors are raised immediately.
+
+    Args:
+        max_retries: Maximum number of retry attempts. Defaults to 3.
+        initial_delay: Initial delay in seconds before first retry. Defaults to 1.0.
+        backoff_factor: Multiplicative factor for exponential delay growth. Defaults to 2.0.
+        use_jitter: Whether to add random jitter (±50%) to delays. Defaults to True.
+
+    Returns:
+        Callable[[F], F]: Decorator that preserves the original function signature.
+
+    Raises:
+        APIError: Re-raised if max retries exceeded or if status code is not retryable.
+
+    Examples:
+        >>> @retry_transient_errors(max_retries=5, initial_delay=2.0)
+        ... def call_gemini():
+        ...     return client.generate_content("Hello")
+    """
+
+    def decorator(func: F) -> F:
+        @functools.wraps(func)
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
+            delay = initial_delay
+            last_exception: Optional[APIError] = None
+
+            for attempt in range(1, max_retries + 1):
+                try:
+                    return func(*args, **kwargs)
+
+                except APIError as e:
+                    last_exception = e
+                    is_retryable = e.status_code in (500, 503, 429)
+                    has_retries_left = attempt < max_retries
+
+                    if is_retryable and has_retries_left:
+                        wait_time = (
+                            delay * (0.5 + random.random() / 2) if use_jitter else delay
+                        )
+                        logger.warning(
+                            f"Transient error (status {e.status_code}) on attempt "
+                            f"{attempt}/{max_retries}. Retrying in {wait_time:.2f}s..."
+                        )
+                        time.sleep(wait_time)
+                        delay *= backoff_factor
+                    else:
+                        raise
+
+            # This line is reached only if all retries exhausted without success
+            if last_exception:
+                raise last_exception
+
+        return wrapper  # type: ignore[return-value]
+
+    return decorator
+
 
 class GeminiParserAsync:
     """An asynchronous client for converting PDF documents to Markdown using Google Gemini"""
 
     @staticmethod
+    @retry_transient_errors()
     async def _extract_text_from_image(
         client: genai.Client,
         file_path: Path,
