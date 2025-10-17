@@ -23,7 +23,7 @@ A FastAPI service for converting PDF documents to clean Markdown using Google's 
 - **FastAPI Application**: CORS-enabled REST API with structured endpoints
 - **Cloud Storage Service**: Google Cloud Storage integration for file operations
 - **PDF Processing Engine**: Converts PDF pages to images using pdf2image
-- **AI Text Extraction**: Gemini-powered image-to-markdown conversion
+- **Text Extraction**: Gemini-powered image-to-markdown conversion
 - **Configuration Management**: Environment-based settings with Pydantic validation
 
 ### Processing Flow
