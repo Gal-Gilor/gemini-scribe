@@ -1,5 +1,5 @@
-name: Deploy to Cloud Run (main branch)
-description: Deploy the application to Cloud Run on the main branch
+name: Deploy to Cloud Run
+description: Deploy the application to Cloud Run on pushes to the main branch
 
 on:
   push:
@@ -47,7 +47,6 @@ jobs:
           service: gemini-scribe
           image: ${{ steps.build-image.outputs.image_tag }}
           region: ${{ vars.GOOGLE_CLOUD_LOCATION }}
-          flags: '--allow-unauthenticated'
           env_vars: |
             GOOGLE_CLOUD_PROJECT=${{ vars.GOOGLE_CLOUD_PROJECT }}
             GOOGLE_CLOUD_LOCATION=${{ vars.GOOGLE_CLOUD_LOCATION }}
