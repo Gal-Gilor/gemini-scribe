@@ -4,8 +4,6 @@
 [![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](LICENSE)
 [![Execute Tests](https://github.com/Gal-Gilor/gemini-scribe/actions/workflows/execute_main_tests.yaml/badge.svg)](https://github.com/Gal-Gilor/gemini-scribe/actions/workflows/execute_main_tests.yaml)
 [![Deployment](https://github.com/Gal-Gilor/gemini-scribe/actions/workflows/deploy_main.yaml/badge.svg)](https://github.com/Gal-Gilor/gemini-scribe/actions/workflows/deploy_main.yaml)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-green.svg)](https://fastapi.tiangolo.com)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Gal-Gilor/gemini-scribe)
 
