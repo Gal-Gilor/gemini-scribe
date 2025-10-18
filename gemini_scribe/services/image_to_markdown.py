@@ -228,7 +228,7 @@ class GeminiParserAsync:
         finally:
             # Clean up temporary image files
             delete_temp_folder = True
-            if "image_paths" in locals() and isinstance(image_paths, list):
+            if "image_paths" in locals() and isinstance(image_paths, list) and image_paths:
                 for img_path in image_paths:
                     try:
                         img_path.unlink(missing_ok=True)
@@ -240,7 +240,7 @@ class GeminiParserAsync:
                 # Remove the temporary parent directory if empty
                 if delete_temp_folder:
                     try:
-                        # Remvove the temporary parent directory if empty
+                        # Remove the temporary parent directory if empty
                         internal_data_directory = image_paths[-1].parent
                         internal_data_directory.rmdir()
 
@@ -249,4 +249,7 @@ class GeminiParserAsync:
                         temp_dir.rmdir()
 
                     except Exception as e:
-                        logger.warning(f"Failed to delete temp directory {temp_dir}: {e}")
+                        logger.warning(
+                            f"Failed to delete temp directory "
+                            f"{internal_data_directory.parent}: {e}"
+                        )
