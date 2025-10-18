@@ -1,4 +1,4 @@
-name: Execute Test (main branch)
+name: Execute Tests
 description: Execute the main tests on the main branch
 
 on:
